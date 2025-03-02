@@ -42,22 +42,44 @@ class Mastermind
     tries_left = 12
     puts
     print 'Now let us start the game. '
+    if @@computer_plays
+      robot_plays()
+    else
+      12.times do
+        input = get_input(@@input_colors)
+        if check_answer_with_code(input)
+          puts ''
+          puts 'Congratulations! You figured out the secret code.'
+          break
+        else
+          give_feedback(input)
+          tries_left -= 1
+          puts ''
+          puts "You have #{tries_left} tries left."
+          puts
+        end
+      end
+      puts 'You lost! I guess you are not a mastermind after all. :-('
+    end
+  end
+
+  def robot_plays()
+    tries_left = 12
     12.times do
-      input = get_input(@@input_colors)
-      update_board(input)
-      if check_answer_with_code(input)
-        puts ''
-        puts 'Congratulations! You figured out the secret code.'
-        break
+      computer_answer = @@input_colors.shuffle()
+      puts "The computer has chosen #{computer_answer}"
+      if check_answer_with_code(computer_answer)
+        puts 'The computer has won!'
+        return
       else
-        give_feedback(input)
+        give_feedback(computer_answer)
         tries_left -= 1
         puts ''
         puts "You have #{tries_left} tries left."
         puts
       end
     end
-    puts 'You lost! I guess you are not a mastermind after all. :-('
+    puts 'You have won! The computer has run out of tries.'
   end
 
   def check_answer_with_code(input)
@@ -80,4 +102,4 @@ class Mastermind
 end
 
 play = Mastermind.new()
-#play.play_game()
+play.play_game()
